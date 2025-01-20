@@ -17,6 +17,8 @@ interface ButtonProps {
   $padding?: string; // Optional, defaults to '10'
   $marginTop?: string; // Optional, defaults to '0'
   $borderColor?: string;
+  $alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
+  $marginRight?: string;
   $onPress?: () => void; // Define the onPress prop
   children: React.ReactNode;
 }
@@ -32,10 +34,12 @@ const Button: React.FC<ButtonProps> = ({
   $brColor = 'transparent', // Default to 'transparent'
   $position = 'relative', // Default to 'relative'
   $borderWidth = '1', // Default to '1'
-  $width = '100', // Default to '100'
+  $width = 'auto', // Default to '100'
   $padding = '10', // Default to '10'
   $marginTop = '0', // Default to '0'
+  $marginRight = '0', // Default to '0'
   $borderColor = 'transparent',
+  $alignItems = 'center',
   $onPress = () => {}, // Default function is a no-op
   children,
 }) => {
@@ -50,9 +54,9 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor: $brColor,
       color: MainColour($primary).primaryColour,
       padding: parseFloat($padding),
-      alignItems: 'center',
+      alignItems: $alignItems,
       alignSelf: 'center',
-      width: `${$width}%`,
+      width: `${$width}`,
       borderBottomLeftRadius: parseFloat($bblRadius),
       borderBottomRightRadius: parseFloat($bbrRadius),
       borderTopLeftRadius: parseFloat($btlRadius),
@@ -61,6 +65,7 @@ const Button: React.FC<ButtonProps> = ({
       borderRightWidth: parseFloat($brWidth),
       marginLeft: parseFloat($marginLeft),
       marginTop: parseFloat($marginTop),
+      marginRight: parseFloat($marginRight),
       position: $position,
       borderColor: $borderColor,
       borderWidth: parseFloat($borderWidth),

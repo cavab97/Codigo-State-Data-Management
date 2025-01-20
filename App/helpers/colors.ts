@@ -13,3 +13,27 @@ export const MainColour = (boolean: boolean) => {
       return {primaryColour: '#BF4F74', secondaryColour: 'white'};
   }
 };
+
+export const SelectMainColour = (boolean: boolean) => {
+  switch (boolean) {
+    case true:
+      return {
+        textColour: 'white',
+        backgroundColour: 'black',
+        borderColor: 'transparent',
+      };
+    case false:
+      return {
+        textColour: 'black',
+        backgroundColour: 'transparent',
+        borderColor: 'black',
+      };
+
+    default:
+      return {
+        textColour: 'white',
+        backgroundColour: 'black',
+        borderColor: 'transparent',
+      };
+  }
+};

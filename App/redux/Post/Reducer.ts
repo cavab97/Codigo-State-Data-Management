@@ -2,16 +2,21 @@ import {POST_REQUEST, POST_FAILED, POST_SUCCESS} from './Constants';
 /**
  * Initial state for this slice of store
  */
+const data = require('../../assets/mockData/Healthconcern.json');
+
 const initialState = {
   loading: false,
   error: null,
-  data: null,
+  screenOneStaticData: data.data,
 };
 /**
  * @description Pure function to manipulate state without mutating immutably
  * @returns states
  */
-const postReducer = (state = initialState, action) => {
+const postReducer = (
+  state = initialState,
+  action: {type: any; payload: any},
+) => {
   switch (action.type) {
     case POST_REQUEST:
       return {

@@ -4,7 +4,7 @@ import {LOGIN_ROUTE} from './Constants';
 import SplashScreen from '../components/SplashScreen';
 import LoginContainer from '../screens/Auth/Login/login.container';
 const Stack = createNativeStackNavigator();
-function AuthRoutes({loading, data, error}) {
+function AuthRoutes({loading, data, error}: any) {
   return (
     <Stack.Navigator>
       {loading === true ? (

@@ -25,3 +25,4 @@ export const store = createStore(
 );
 sagaMiddleware.run(authSaga);
 sagaMiddleware.run(postSaga);
+export type RootState = ReturnType<typeof rootReducer>;

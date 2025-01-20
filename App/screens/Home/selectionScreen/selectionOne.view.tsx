@@ -1,10 +1,9 @@
 import {View, Text, Image, StatusBar} from 'react-native';
 import React from 'react';
-import Button from '../../components/Button/button';
-import {MainColour} from '../../helpers/colors';
-import {matrix} from '../../helpers';
-import {SELECTION_ONE} from '../../navigation/Constants';
-function HomeView({navigation}: any) {
+import Button from '../../../components/Button/button';
+import {MainColour} from '../../../helpers/colors';
+import {matrix} from '../../../helpers';
+function SelectionOne({navigation}: any) {
   return (
     <View
       style={{
@@ -21,7 +20,16 @@ function HomeView({navigation}: any) {
           fontSize: matrix.moderateScale(30),
           alignSelf: 'flex-start',
         }}>
-        Welcome to DailyVita
+        Select the top health concerns.
+        <Text style={{color: 'red'}}>*</Text>
+      </Text>
+      <Text
+        style={{
+          fontWeight: 'bold',
+          fontSize: matrix.moderateScale(30),
+          alignSelf: 'flex-start',
+        }}>
+        (upto 5)
       </Text>
       <Text
         style={{
@@ -32,15 +40,6 @@ function HomeView({navigation}: any) {
         Hello, we are here to make your life healthier and happier
       </Text>
 
-      <Image
-        source={require('../../assets/images/introImage.png')}
-        resizeMode="contain"
-        style={{
-          width: matrix.horizontalScale(250),
-          height: matrix.verticalScale(250),
-        }}
-        borderRadius={10}
-      />
       <Text
         style={{
           fontWeight: 'bold',
@@ -60,17 +59,27 @@ function HomeView({navigation}: any) {
           alignContent: 'center',
           alignItems: 'center',
         }}>
-        <Button
-          $onPress={() => navigation.navigate(SELECTION_ONE)}
-          $brColor={MainColour(true).secondaryColour}>
-          <Text
-            style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
-            Get Started
-          </Text>
-        </Button>
+        <View style={{flexDirection: 'row'}}>
+          <Button $width={'30'}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: matrix.moderateScale(20),
+                color: MainColour(true).secondaryColour,
+              }}>
+              Back
+            </Text>
+          </Button>
+          <Button $brColor={MainColour(true).secondaryColour} $width={'30'}>
+            <Text
+              style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
+              Next
+            </Text>
+          </Button>
+        </View>
       </View>
     </View>
   );
 }
 
-export default HomeView;
+export default SelectionOne;

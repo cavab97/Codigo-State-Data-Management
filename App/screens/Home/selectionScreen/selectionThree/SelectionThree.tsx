@@ -8,17 +8,28 @@ import {
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import Button from '../../../../components/Button/button';
-import {MainColour} from '../../../../helpers/colors';
+import {MainColour, SelectMainColour} from '../../../../helpers/colors';
 import {matrix} from '../../../../helpers';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../../redux/store';
 import {Input} from 'antd-mobile';
+import {IAllergies} from '../../../../model/data';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {postAllergeiesAdd} from '../../../../redux/Post/Reducer';
 
 export function SelectionThree({navigation}: any) {
   const data = useSelector((state: RootState) => state.post);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<any>(undefined);
+
+  const [typing, setTyping] = useState('');
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const [substringBack, setSubstringBack] = useState('');
+
   const [filteredData, setFilteredData] = useState(data.screenThreeStaticData);
+
   const textInputRef = useRef<TextInput>(null);
+  const [isDeletePressed, setIsDeletePressed] = useState(false);
+  const dispatch = useDispatch();
 
   if (!data || !data.screenTwoAddedData) {
     return (
@@ -34,14 +45,40 @@ export function SelectionThree({navigation}: any) {
       </View>
     );
   }
+  const handleSelectionChange = (event: any) => {
+    const {selection} = event.nativeEvent;
+    console.log(`selection${selection.start}`);
+    if (!isDeletePressed) {
+      setCursorPosition(selection.start); // Update cursor position state
+    }
+  };
+  const handleKeyPress = (e: any) => {
+    if (e.nativeEvent.key === 'Backspace') {
+      setIsDeletePressed(true);
+    }
+  };
+
   const handleSearch = (text: string) => {
     setSearchTerm(text);
 
-    const filtered = data.screenThreeStaticData.filter((item: any) =>
-      item.name.toLowerCase().includes(text.toLowerCase()),
-    );
+    const substringBack = (searchTerm || '').slice(cursorPosition, text.length);
+    const substringFront = (text || '').slice(0, cursorPosition);
+    if (typing != substringFront) {
+      setTyping(substringFront);
+      const filtered = data.screenThreeStaticData.filter((item: any) =>
+        item.name.toLowerCase().includes(substringFront.toLowerCase()),
+      );
+      if (filtered.length == 0) {
+        const newItem = {name: text.toString() || '', id: Math.random()};
 
-    setFilteredData(filtered);
+        setFilteredData([newItem]);
+      } else {
+        setFilteredData(filtered);
+      }
+    }
+
+    console.log(`substringBack${substringBack}`);
+    console.log(`substringFront${substringFront}`);
   };
   const activatePlaceholder = () => {
     if (textInputRef.current) {
@@ -73,21 +110,58 @@ export function SelectionThree({navigation}: any) {
         </Text>
 
         <View style={styles.container}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search here.."
-            value={searchTerm}
-            onChangeText={handleSearch}
-            ref={textInputRef} // Assign ref to the TextInput
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              backgroundColor: 'yellow',
+              alignContent: 'center',
+              alignItems: 'center',
+            }}>
+            {
+              <Button
+                $disabbled={true}
+                $borderColor={SelectMainColour(true).borderColor}
+                $brColor={SelectMainColour(true).backgroundColour}
+                $alignItems={'flex-start'}
+                $width={'auto'}
+                $btrRadius={'20'}
+                $btlRadius={'20'}
+                $bbrRadius={'20'}
+                $bblRadius={'20'}>
+                <Text style={{color: SelectMainColour(true).textColour}}>
+                  {'item.name'}
+                </Text>
+              </Button>
+            }
+
+            <TextInput
+              style={styles.searchInput}
+              placeholder="search"
+              value={searchTerm}
+              onChangeText={handleSearch}
+              onKeyPress={handleKeyPress}
+              onSelectionChange={handleSelectionChange} // Track cursor position
+              selection={
+                cursorPosition == -1
+                  ? undefined
+                  : {start: cursorPosition, end: cursorPosition}
+              }
+              autoFocus={true}
+              ref={textInputRef} // Assign ref to the TextInput
+            />
+          </View>
 
           <FlatList
             data={filteredData}
             keyExtractor={item => item.name}
             renderItem={({item}) => (
-              <View style={styles.itemContainer}>
+              <TouchableOpacity
+                style={styles.itemContainer}
+                onPress={() => {
+                  dispatch(postAllergeiesAdd(item));
+                }}>
                 <Text>{item.name}</Text>
-              </View>
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -133,13 +207,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   searchInput: {
-    height: 40,
-    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 20,
+    borderColor: 'transparent',
     paddingLeft: 10,
     borderRadius: 5,
     width: '20%',
+    alignSelf: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
   },
   itemContainer: {
     padding: 10,

@@ -1,24 +1,48 @@
-import {View, Text, StatusBar} from 'react-native';
+import {View, Text, StatusBar, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import Button from '../../../../components/Button/button';
 import {MainColour} from '../../../../helpers/colors';
 import {matrix} from '../../../../helpers';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../../redux/store';
-import CheckBox from '@react-native-community/checkbox';
+import {RadioButton} from '../../../../components/Ratio';
+import {AlcoholCategory} from '../../../../helpers/enum';
+import {postRatioUpdate} from '../../../../redux/Post/Reducer';
 
-export function SelectionThree({navigation}: any) {
+export function SelectionFour({navigation}: any) {
   const data = useSelector((state: RootState) => state.post);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [selectedExposureValue, setSelectedExposureValue] = useState<
+    boolean | null
+  >(null);
+  const [selectedSmokeValue, setSelectedSmokeValue] = useState<boolean | null>(
+    null,
+  );
+  const [selectedAcoholValue, setSelectedAcoholValue] =
+    useState<AlcoholCategory | null>(null);
+  const dispatch = useDispatch();
 
-  if (!data || !data.screenTwoAddedData) {
+  const optionsExposure = [
+    {label: 'Yes', value: true},
+    {label: 'No', value: false},
+  ];
+  const optionsSmoke = [
+    {label: 'Yes', value: true},
+    {label: 'No', value: false},
+  ];
+  const optionsAcohol = [
+    {label: AlcoholCategory.Minimal, value: AlcoholCategory.Minimal},
+    {label: AlcoholCategory.Moderate, value: AlcoholCategory.Moderate},
+    {label: AlcoholCategory.Heavy, value: AlcoholCategory.Heavy},
+  ];
+  if (!data || !data.screenFourAddedData) {
     return (
       <View>
         <Text> Loading...</Text>
       </View>
     ); // Show loading if the data is undefined
   }
-  if (!Array.isArray(data.screenTwoAddedData)) {
+  if (!Array.isArray(data.screenFourAddedData)) {
     return (
       <View>
         <Text>Error: data.screenOneAddedData is not an array</Text>
@@ -37,31 +61,92 @@ export function SelectionThree({navigation}: any) {
         paddingHorizontal: matrix.horizontalScale(20),
       }}>
       <StatusBar animated={true} backgroundColor="#61dafb" hidden={true} />
-      <View>
+      <View style={{alignSelf: 'flex-start'}}>
         <Text
           adjustsFontSizeToFit={true}
-          numberOfLines={1}
           style={{
             fontWeight: 'bold',
             fontSize: matrix.moderateScale(25),
             alignSelf: 'flex-start',
           }}>
-          Select the diets you follow.
+          Is your daily exposure to sun is limited?
           <Text style={{color: 'red'}}>*</Text>
         </Text>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: 'yellow',
-            alignItems: 'center',
-          }}>
-          <CheckBox
-            disabled={false}
-            value={toggleCheckBox}
-            onValueChange={newValue => setToggleCheckBox(newValue)}
+        <View style={styles.container}>
+          <RadioButton
+            options={optionsExposure}
+            selectedValue={selectedExposureValue}
+            onValueChange={(value: any) => {
+              const updatedUserHabits = {
+                is_daily_exposure: value,
+                is_smoke: selectedSmokeValue,
+                alcohol: selectedAcoholValue,
+              };
+
+              dispatch(postRatioUpdate(updatedUserHabits));
+              setSelectedExposureValue(value);
+            }}
           />
-          <Text>Do you like React Native?</Text>
+        </View>
+      </View>
+      <View style={{alignSelf: 'flex-start'}}>
+        <Text
+          adjustsFontSizeToFit={true}
+          style={{
+            fontWeight: 'bold',
+            fontSize: matrix.moderateScale(25),
+            alignSelf: 'flex-start',
+          }}>
+          Do you current smoke (tobacco or marijuana)?
+          <Text style={{color: 'red'}}>*</Text>
+        </Text>
+
+        <View style={styles.container}>
+          <RadioButton
+            options={optionsSmoke}
+            selectedValue={selectedSmokeValue}
+            onValueChange={(value: any) => {
+              const updatedUserHabits = {
+                is_daily_exposure: selectedExposureValue,
+                is_smoke: value,
+                alcohol: selectedAcoholValue,
+              };
+
+              dispatch(postRatioUpdate(updatedUserHabits));
+              setSelectedSmokeValue(value);
+            }}
+          />
+        </View>
+      </View>
+
+      <View style={{alignSelf: 'flex-start'}}>
+        <Text
+          adjustsFontSizeToFit={true}
+          style={{
+            fontWeight: 'bold',
+            fontSize: matrix.moderateScale(25),
+            alignSelf: 'flex-start',
+          }}>
+          Is your daily exposure to sun is limited?
+          <Text style={{color: 'red'}}>*</Text>
+        </Text>
+
+        <View style={styles.container}>
+          <RadioButton
+            options={optionsAcohol}
+            selectedValue={selectedAcoholValue}
+            onValueChange={(value: any) => {
+              const updatedUserHabits = {
+                is_daily_exposure: selectedExposureValue,
+                is_smoke: selectedSmokeValue,
+                alcohol: value,
+              };
+
+              dispatch(postRatioUpdate(updatedUserHabits));
+              setSelectedAcoholValue(value);
+            }}
+          />
         </View>
       </View>
 
@@ -75,25 +160,39 @@ export function SelectionThree({navigation}: any) {
           alignContent: 'center',
           alignItems: 'center',
         }}>
-        <View style={{flexDirection: 'row'}}>
-          <Button $width={'30%'} $onPress={() => navigation.pop()}>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontSize: matrix.moderateScale(20),
-                color: MainColour(true).secondaryColour,
-              }}>
-              Back
-            </Text>
-          </Button>
-          <Button $brColor={MainColour(true).secondaryColour} $width={'30%'}>
-            <Text
-              style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
-              Next
-            </Text>
-          </Button>
-        </View>
+        <Button
+          $onPress={() =>
+            console.log(
+              'health_concerns :' + JSON.stringify(data.screenOneAddedData),
+              'diets :' + JSON.stringify(data.screenTwoAddedData),
+              'health_concerns :' + JSON.stringify(data.screenFourAddedData),
+              'allergies :' + JSON.stringify(data.screenThreeAddedData),
+            )
+          }
+          $brColor={MainColour(true).secondaryColour}
+          $btrRadius={'10'}
+          $btlRadius={'10'}
+          $bbrRadius={'10'}
+          $bblRadius={'10'}>
+          <Text
+            style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
+            Get my personlized vitamin
+          </Text>
+        </Button>
       </View>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+
+  selectedText: {
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

@@ -62,7 +62,11 @@ function HomeView({navigation}: any) {
         }}>
         <Button
           $onPress={() => navigation.navigate(SELECTION_ONE)}
-          $brColor={MainColour(true).secondaryColour}>
+          $brColor={MainColour(true).secondaryColour}
+          $btrRadius={'10'}
+          $btlRadius={'10'}
+          $bbrRadius={'10'}
+          $bblRadius={'10'}>
           <Text
             style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
             Get Started

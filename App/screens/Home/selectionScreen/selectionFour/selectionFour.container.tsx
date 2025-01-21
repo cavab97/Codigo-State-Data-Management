@@ -1,8 +1,8 @@
 import React from 'react';
-import {SelectionThree} from './SelectionFour';
+import {SelectionFour} from './SelectionFour';
 
-function SelectionThreeContainer(props: React.JSX.IntrinsicAttributes) {
-  return <SelectionThree {...props} />;
+function SelectionFourContainer(props: React.JSX.IntrinsicAttributes) {
+  return <SelectionFour {...props} />;
 }
 
-export default SelectionThreeContainer;
+export default SelectionFourContainer;

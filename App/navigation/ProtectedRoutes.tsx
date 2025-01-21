@@ -5,6 +5,7 @@ import {
   HOME_ROUTE,
   LOGIN_ROUTE,
   POST_ROUTE,
+  SELECTION_FOUR,
   SELECTION_ONE,
   SELECTION_THREE,
   SELECTION_TWO,
@@ -16,7 +17,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SelectionOneContainer from '../screens/Home/selectionScreen/selectionOne/selectionOne.container';
 import SelectionTwoContainer from '../screens/Home/selectionScreen/selectionTwo/selectionTwo.container';
 import SelectionThreeContainer from '../screens/Home/selectionScreen/selectionThree/selectionThree.container';
-
+import SelectionFourContainer from '../screens/Home/selectionScreen/selectionFour/selectionFour.container';
 // const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +35,7 @@ function ProtectedRoutes() {
         name={SELECTION_THREE}
         component={SelectionThreeContainer}
       />
-
+      <Stack.Screen name={SELECTION_FOUR} component={SelectionFourContainer} />
       <Stack.Screen name={ABOUT_ROUTE} component={AboutContainer} />
     </Stack.Navigator>
   );

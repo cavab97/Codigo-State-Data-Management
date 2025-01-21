@@ -12,10 +12,8 @@ import {MainColour, SelectMainColour} from '../../../../helpers/colors';
 import {matrix} from '../../../../helpers';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../../redux/store';
-import {Input} from 'antd-mobile';
-import {IAllergies} from '../../../../model/data';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {postAllergeiesAdd} from '../../../../redux/Post/Reducer';
+import {SELECTION_FOUR} from '../../../../navigation/Constants';
 
 export function SelectionThree({navigation}: any) {
   const data = useSelector((state: RootState) => state.post);
@@ -47,7 +45,6 @@ export function SelectionThree({navigation}: any) {
   }
   const handleSelectionChange = (event: any) => {
     const {selection} = event.nativeEvent;
-    console.log(`selection${selection.start}`);
     if (!isDeletePressed) {
       setCursorPosition(selection.start); // Update cursor position state
     }
@@ -76,14 +73,6 @@ export function SelectionThree({navigation}: any) {
         setFilteredData(filtered);
       }
     }
-
-    console.log(`substringBack${substringBack}`);
-    console.log(`substringFront${substringFront}`);
-  };
-  const activatePlaceholder = () => {
-    if (textInputRef.current) {
-      textInputRef.current.focus();
-    }
   };
 
   return (
@@ -97,7 +86,11 @@ export function SelectionThree({navigation}: any) {
         paddingHorizontal: matrix.horizontalScale(20),
       }}>
       <StatusBar animated={true} backgroundColor="#61dafb" hidden={true} />
-      <View>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          height: '60%',
+        }}>
         <Text
           adjustsFontSizeToFit={true}
           style={{
@@ -113,26 +106,33 @@ export function SelectionThree({navigation}: any) {
           <View
             style={{
               flexDirection: 'row',
-              backgroundColor: 'yellow',
               alignContent: 'center',
               alignItems: 'center',
+              flexWrap: 'wrap',
+              borderWidth: 0.5,
+              borderColor: 'grey',
             }}>
-            {
-              <Button
-                $disabbled={true}
-                $borderColor={SelectMainColour(true).borderColor}
-                $brColor={SelectMainColour(true).backgroundColour}
-                $alignItems={'flex-start'}
-                $width={'auto'}
-                $btrRadius={'20'}
-                $btlRadius={'20'}
-                $bbrRadius={'20'}
-                $bblRadius={'20'}>
-                <Text style={{color: SelectMainColour(true).textColour}}>
-                  {'item.name'}
-                </Text>
-              </Button>
-            }
+            {data.screenThreeAddedData.map((item, index) => {
+              return (
+                <Button
+                  key={index}
+                  $disabbled={true}
+                  $borderColor={SelectMainColour(true).borderColor}
+                  $brColor={SelectMainColour(true).backgroundColour}
+                  $alignItems={'flex-start'}
+                  $width={'auto'}
+                  $btrRadius={'20'}
+                  $btlRadius={'20'}
+                  $bbrRadius={'20'}
+                  $bblRadius={'20'}
+                  $marginRight="2"
+                  $marginTop="5">
+                  <Text style={{color: SelectMainColour(true).textColour}}>
+                    {item.name}
+                  </Text>
+                </Button>
+              );
+            })}
 
             <TextInput
               style={styles.searchInput}
@@ -146,7 +146,6 @@ export function SelectionThree({navigation}: any) {
                   ? undefined
                   : {start: cursorPosition, end: cursorPosition}
               }
-              autoFocus={true}
               ref={textInputRef} // Assign ref to the TextInput
             />
           </View>
@@ -154,15 +153,35 @@ export function SelectionThree({navigation}: any) {
           <FlatList
             data={filteredData}
             keyExtractor={item => item.name}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                style={styles.itemContainer}
-                onPress={() => {
-                  dispatch(postAllergeiesAdd(item));
-                }}>
-                <Text>{item.name}</Text>
-              </TouchableOpacity>
-            )}
+            renderItem={({item}) => {
+              // Check if the item exists in screenThreeAddedData
+              const itemExists = data.screenThreeAddedData.some(
+                data => data.name === item.name,
+              );
+              if (itemExists) {
+                return null;
+              }
+              return (
+                !itemExists && (
+                  <Button
+                    key={item.name}
+                    $onPress={() => {
+                      dispatch(postAllergeiesAdd(item));
+                    }}
+                    $padding="10"
+                    $width="100%"
+                    $disabbled={itemExists}
+                    $brColor={SelectMainColour(false).backgroundColour}
+                    $alignItems={'flex-start'}
+                    $alignSelf={'flex-start'}
+                    $brWidth="0">
+                    <Text style={{color: SelectMainColour(false).textColour}}>
+                      {item.name}
+                    </Text>
+                  </Button>
+                )
+              );
+            }}
           />
         </View>
       </View>
@@ -188,7 +207,10 @@ export function SelectionThree({navigation}: any) {
               Back
             </Text>
           </Button>
-          <Button $brColor={MainColour(true).secondaryColour} $width={'30%'}>
+          <Button
+            $brColor={MainColour(true).secondaryColour}
+            $width={'30%'}
+            $onPress={() => navigation.navigate(SELECTION_FOUR)}>
             <Text
               style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
               Next
@@ -203,8 +225,8 @@ export function SelectionThree({navigation}: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F4F4F4',
+    marginTop: 20,
   },
   searchInput: {
     borderWidth: 1,

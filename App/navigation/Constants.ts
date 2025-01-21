@@ -8,3 +8,4 @@ export const POST_ROUTE = 'Post';
 export const SELECTION_ONE = 'Selection One';
 export const SELECTION_TWO = 'Selection Two';
 export const SELECTION_THREE = 'Selection Three';
+export const SELECTION_FOUR = 'Selection Four';

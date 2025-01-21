@@ -12,7 +12,6 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
 import {useDispatch} from 'react-redux';
-import {postHealthyAdd} from '../../../../redux/Post/Actions';
 import {postAdd, postReset} from '../../../../redux/Post/Reducer';
 import {SELECTION_TWO} from '../../../../navigation/Constants';
 
@@ -37,7 +36,6 @@ function SelectionOne({navigation}: any) {
   const dispatch = useDispatch();
 
   const renderItem = ({item, drag, isActive}: any) => {
-    console.log(`item${JSON.stringify(item)}`);
     return (
       <ScaleDecorator>
         <TouchableOpacity
@@ -118,6 +116,7 @@ function SelectionOne({navigation}: any) {
 
               return (
                 <Button
+                  key={index}
                   $borderColor={SelectMainColour(isSelected).borderColor}
                   $brColor={SelectMainColour(isSelected).backgroundColour}
                   $alignItems={'center'}
@@ -176,10 +175,10 @@ function SelectionOne({navigation}: any) {
           Prioritize
         </Text>
 
-        <View style={{flex: 0, height: 300, backgroundColor: 'purple'}}>
+        <View style={{flex: 0, height: 300}}>
           <DraggableFlatList
             dragItemOverflow={true}
-            containerStyle={{backgroundColor: 'yellow', flex: 0}}
+            containerStyle={{flex: 0}}
             data={data.screenOneAddedData}
             onDragEnd={({data}) => dispatch(postReset(data))}
             keyExtractor={(item, index) => `draggable-item-${item.name}`}

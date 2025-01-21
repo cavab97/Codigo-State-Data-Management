@@ -1,3 +1,5 @@
+import {AlcoholCategory} from '../../helpers/enum';
+
 export interface HealthConcernModel {
   id: number;
   name: string;
@@ -12,4 +14,10 @@ export interface ICategory {
 export interface IAllergies {
   id: number;
   name: string;
+}
+
+export interface UserHabits {
+  is_daily_exposure: boolean | null;
+  is_smoke: boolean | null;
+  alcohol: AlcoholCategory | null;
 }

@@ -20,6 +20,7 @@ interface ButtonProps {
   $alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
   $marginRight?: string;
   $disabbled?: boolean;
+  $alignSelf?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
   $onPress?: () => void; // Define the onPress prop
   children: React.ReactNode;
 }
@@ -41,6 +42,7 @@ const Button: React.FC<ButtonProps> = ({
   $marginRight = '0', // Default to '0'
   $borderColor = 'transparent',
   $alignItems = 'center',
+  $alignSelf = 'center',
   $disabbled = false,
   $onPress = () => {}, // Default function is a no-op
   children,
@@ -57,7 +59,7 @@ const Button: React.FC<ButtonProps> = ({
       color: MainColour($primary).primaryColour,
       padding: parseFloat($padding),
       alignItems: $alignItems,
-      alignSelf: 'center',
+      alignSelf: $alignSelf,
       width: `${$width}`,
       borderBottomLeftRadius: parseFloat($bblRadius),
       borderBottomRightRadius: parseFloat($bbrRadius),

@@ -58,13 +58,14 @@ export function SelectionTwo({navigation}: any) {
           <Text style={{color: 'red'}}>*</Text>
         </Text>
         <View>
-          {data.screenTwoStaticData.map((IDiet: ICategory) => {
+          {data.screenTwoStaticData.map((IDiet: ICategory, index) => {
             return (
               <View
+                key={index}
                 style={{
                   flexDirection: 'row',
-                  backgroundColor: 'yellow',
                   alignItems: 'center',
+                  paddingVertical: 8,
                 }}>
                 <CheckBox
                   disabled={false}
@@ -86,6 +87,7 @@ export function SelectionTwo({navigation}: any) {
                 />
                 <Text>{IDiet.name} </Text>
                 <Tooltip
+                  topAdjustment={-20}
                   isVisible={toolTipVisible == IDiet.id}
                   content={<Text>{IDiet.tool_tip}</Text>}
                   placement="right"

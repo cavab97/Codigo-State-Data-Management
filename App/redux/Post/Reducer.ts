@@ -1,5 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {HealthConcernModel, IAllergies, ICategory} from '../../model/data';
+import {
+  HealthConcernModel,
+  IAllergies,
+  ICategory,
+  UserHabits,
+} from '../../model/data';
 import {POST_REQUEST, POST_FAILED, POST_SUCCESS, POST_ADD} from './Constants';
 
 const dataHealthConcern = require('../../assets/mockData/Healthconcern.json');
@@ -14,6 +19,7 @@ interface PostState {
   screenTwoAddedData: ICategory[];
   screenThreeStaticData: IAllergies[];
   screenThreeAddedData: IAllergies[];
+  screenFourAddedData: UserHabits[];
 }
 
 const initialState: PostState = {
@@ -25,6 +31,7 @@ const initialState: PostState = {
   screenTwoAddedData: [],
   screenThreeStaticData: dataAllergies.data,
   screenThreeAddedData: [],
+  screenFourAddedData: [],
 };
 
 const postSlice = createSlice({
@@ -84,6 +91,15 @@ const postSlice = createSlice({
         : [action.payload];
       state.screenThreeAddedData.push(...newData);
     },
+    postRatioUpdate: (
+      state,
+      action: PayloadAction<UserHabits | UserHabits[]>,
+    ) => {
+      state.loading = false;
+      state.screenFourAddedData = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+    },
   },
 });
 
@@ -96,6 +112,7 @@ export const {
   postDietAdd,
   postDietReset,
   postAllergeiesAdd,
+  postRatioUpdate,
 } = postSlice.actions;
 
 export default postSlice.reducer;

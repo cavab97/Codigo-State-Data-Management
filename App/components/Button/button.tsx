@@ -19,6 +19,7 @@ interface ButtonProps {
   $borderColor?: string;
   $alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
   $marginRight?: string;
+  $disabbled?: boolean;
   $onPress?: () => void; // Define the onPress prop
   children: React.ReactNode;
 }
@@ -40,6 +41,7 @@ const Button: React.FC<ButtonProps> = ({
   $marginRight = '0', // Default to '0'
   $borderColor = 'transparent',
   $alignItems = 'center',
+  $disabbled = false,
   $onPress = () => {}, // Default function is a no-op
   children,
 }) => {
@@ -76,7 +78,10 @@ const Button: React.FC<ButtonProps> = ({
   });
 
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={handlePress}
+      disabled={$disabbled}>
       <Text style={styles.text}>{children}</Text>
     </TouchableOpacity>
   );

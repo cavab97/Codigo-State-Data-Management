@@ -1,45 +1,68 @@
-import {POST_REQUEST, POST_FAILED, POST_SUCCESS} from './Constants';
-/**
- * Initial state for this slice of store
- */
-const data = require('../../assets/mockData/Healthconcern.json');
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {HealthConcernModel, ICategory} from '../../model/data';
+import {POST_REQUEST, POST_FAILED, POST_SUCCESS, POST_ADD} from './Constants';
 
-const initialState = {
+const dataHealthConcern = require('../../assets/mockData/Healthconcern.json');
+const dataDiets = require('../../assets/mockData/Diets.json');
+
+interface PostState {
+  loading: boolean;
+  error: string | null;
+  screenOneStaticData: HealthConcernModel[];
+  screenOneAddedData: HealthConcernModel[];
+  screenTwoStaticData: ICategory[];
+  screenTwoAddedData: ICategory[];
+}
+
+const initialState: PostState = {
   loading: false,
   error: null,
-  screenOneStaticData: data.data,
+  screenOneStaticData: dataHealthConcern.data,
+  screenOneAddedData: [],
+  screenTwoStaticData: dataDiets.data,
+  screenTwoAddedData: [],
 };
-/**
- * @description Pure function to manipulate state without mutating immutably
- * @returns states
- */
-const postReducer = (
-  state = initialState,
-  action: {type: any; payload: any},
-) => {
-  switch (action.type) {
-    case POST_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
-    case POST_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: action.payload,
-        error: null,
-      };
-    case POST_FAILED:
-      return {
-        ...state,
-        loading: false,
-        data: null,
-        error: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-export default postReducer;
+
+const postSlice = createSlice({
+  name: 'post',
+  initialState,
+  reducers: {
+    postRequest: state => {
+      state.loading = true;
+      state.error = null;
+    },
+    postSuccess: (state, action: PayloadAction<HealthConcernModel[]>) => {
+      state.loading = false;
+      state.screenOneStaticData = action.payload;
+      state.error = null;
+    },
+    postFailed: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    postAdd: (
+      state,
+      action: PayloadAction<HealthConcernModel | HealthConcernModel[]>,
+    ) => {
+      const newData = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      state.screenOneAddedData.push(...newData);
+    },
+    postReset: (
+      state,
+      action: PayloadAction<HealthConcernModel | HealthConcernModel[]>,
+    ) => {
+      state.loading = false;
+      state.screenOneAddedData = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+    },
+  },
+});
+
+export const {postRequest, postSuccess, postFailed, postAdd, postReset} =
+  postSlice.actions;
+
+export default postSlice.reducer;

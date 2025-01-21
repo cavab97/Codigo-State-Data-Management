@@ -6,5 +6,10 @@ export interface HealthConcernModel {
 export interface ICategory {
   id: number;
   name: string;
-  toolTip: string;
+  tool_tip: string;
+}
+
+export interface IAllergies {
+  id: number;
+  name: string;
 }

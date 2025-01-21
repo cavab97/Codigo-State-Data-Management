@@ -14,6 +14,7 @@ import DraggableFlatList, {
 import {useDispatch} from 'react-redux';
 import {postHealthyAdd} from '../../../../redux/Post/Actions';
 import {postAdd, postReset} from '../../../../redux/Post/Reducer';
+import {SELECTION_TWO} from '../../../../navigation/Constants';
 
 function SelectionOne({navigation}: any) {
   const data = useSelector((state: RootState) => state.post);
@@ -32,9 +33,7 @@ function SelectionOne({navigation}: any) {
       </View>
     );
   }
-  const [selectHealthData, setSelectHealthData] = useState<
-    HealthConcernModel[]
-  >(data.screenOneAddedData || []);
+
   const dispatch = useDispatch();
 
   const renderItem = ({item, drag, isActive}: any) => {
@@ -74,11 +73,6 @@ function SelectionOne({navigation}: any) {
       </ScaleDecorator>
     );
   };
-
-  useEffect(() => {
-    // Set the data from the JSON file to state
-    console.log(`healtyConcern${JSON.stringify(data.screenOneAddedData)}`);
-  }, [selectHealthData]);
 
   return (
     <View
@@ -214,7 +208,10 @@ function SelectionOne({navigation}: any) {
               Back
             </Text>
           </Button>
-          <Button $brColor={MainColour(true).secondaryColour} $width={'30%'}>
+          <Button
+            $brColor={MainColour(true).secondaryColour}
+            $width={'30%'}
+            $onPress={() => navigation.navigate(SELECTION_TWO)}>
             <Text
               style={{fontWeight: 'bold', fontSize: matrix.moderateScale(20)}}>
               Next

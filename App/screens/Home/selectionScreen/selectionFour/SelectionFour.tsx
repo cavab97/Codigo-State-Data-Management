@@ -1,46 +1,30 @@
-import {View, Text, Image, StatusBar, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, StatusBar} from 'react-native';
+import React, {useState} from 'react';
 import Button from '../../../../components/Button/button';
-import {MainColour, SelectMainColour} from '../../../../helpers/colors';
+import {MainColour} from '../../../../helpers/colors';
 import {matrix} from '../../../../helpers';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../../redux/store';
-import {HealthConcernModel} from '../../../../model/data';
-import Icon from 'react-native-vector-icons/Feather';
-import {showMessage} from 'react-native-flash-message';
-import DraggableFlatList, {
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist';
-import {useDispatch} from 'react-redux';
-import {postHealthyAdd} from '../../../../redux/Post/Actions';
-import {postAdd, postReset} from '../../../../redux/Post/Reducer';
+import CheckBox from '@react-native-community/checkbox';
 
-function SelectionOne({navigation}: any) {
+export function SelectionThree({navigation}: any) {
   const data = useSelector((state: RootState) => state.post);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-  if (!data || !data.screenOneAddedData) {
+  if (!data || !data.screenTwoAddedData) {
     return (
       <View>
         <Text> Loading...</Text>
       </View>
     ); // Show loading if the data is undefined
   }
-  if (!Array.isArray(data.screenOneAddedData)) {
+  if (!Array.isArray(data.screenTwoAddedData)) {
     return (
       <View>
         <Text>Error: data.screenOneAddedData is not an array</Text>
       </View>
     );
   }
-  const [selectHealthData, setSelectHealthData] = useState<
-    HealthConcernModel[]
-  >(data.screenOneAddedData || []);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    // Set the data from the JSON file to state
-    console.log(`healtyConcern${JSON.stringify(data.screenOneAddedData)}`);
-  }, [selectHealthData]);
 
   return (
     <View
@@ -65,6 +49,20 @@ function SelectionOne({navigation}: any) {
           Select the diets you follow.
           <Text style={{color: 'red'}}>*</Text>
         </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: 'yellow',
+            alignItems: 'center',
+          }}>
+          <CheckBox
+            disabled={false}
+            value={toggleCheckBox}
+            onValueChange={newValue => setToggleCheckBox(newValue)}
+          />
+          <Text>Do you like React Native?</Text>
+        </View>
       </View>
 
       <View
@@ -99,5 +97,3 @@ function SelectionOne({navigation}: any) {
     </View>
   );
 }
-
-export default SelectionOne;

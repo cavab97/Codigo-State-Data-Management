@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectionTwo from './selectionTwo.view';
+import {SelectionTwo} from './SelectionTwo';
 
 function SelectionTwoContainer(props: React.JSX.IntrinsicAttributes) {
   return <SelectionTwo {...props} />;
